@@ -29,21 +29,41 @@ app.post("/students", async (req, res) => {
     res.status(400).send(error);
   }
 });
+//geting user by id
+// app.get("/students/:id", async (req, res) => {
+//   try {
+//     const _id = req.params.id;
+//     const studentData = await Student.findById(_id);
+//     console.log(studentData)
+//     if (!studentData) {
+//       return res.status(404).send();
+//     } else {
+//       res.status(200).send(studentData);
+//     }
+//   } catch (error) {
+//     res.status(400).send(error);
+//   }
+// });
 
-app.get("/students/:id", async (req, res) => {
-  try {
-    const _id = req.params.id;
-    const studentData = await Student.findById(_id);
-    console.log(studentData)
-    if (!studentData) {
-      return res.status(404).send();
-    } else {
-      res.status(200).send(studentData);
+
+//getting user by name
+
+app.get("/students/:name",async(req,res)=>{
+    try {
+        const name=req.params.name;
+        console.log("This is paaram result",name);
+      //findinf the student by name
+        const studentData=await Student.findOne({name})
+       console.log(studentData)
+        if(!studentData){
+            return res.status(400).send();
+        }else{
+            res.status(200).send(studentData)
+        }
+    } catch (error) {
+        res.status(400).send(error)
     }
-  } catch (error) {
-    res.status(400).send(error);
-  }
-});
+})
 app.listen(port, () => {
   console.log(`Connection is setup ${port}`);
 });
