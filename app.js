@@ -6,20 +6,19 @@ app.use(express.json())
 require("./db/connection")
 const Student=require('./models/students')
 
-app.get("/",(req,res)=>{
-    res.send("hello from get ok this")
-})
-// app.post("/students",(req,res)=>{
-//     console.log(req.body )
-//     const user= new Student(req.body)
-//    user.save().then(()=>{
-   
-//    }).catch((e)=>{
-// res.status(400).send(e)
-//    })
-//     // res.send("Heloo from post  djewjdfgfc api")
+// app.get("/",(req,res)=>{
+//     res.send("hello from get ok this")
 // })
 
+app.get("/", async(req,res)=>{
+    try {
+        const students=await Student.find();
+        res.status(200).send(students)
+    } catch (error) {
+     res.status(500).send(error)   
+    }
+})
+//create post request
 app.post("/students",async(req,res)=>{
     try {
         const user=new Student(req.body)
