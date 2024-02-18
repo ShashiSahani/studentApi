@@ -67,6 +67,31 @@ app.get("/students/:name",async(req,res)=>{
     }
 })
 
+//making patch request using name
+app.patch('/students/:name', async (req, res) => {
+  try {
+    const studentName = req.params.name;
+
+
+    const updateStudent = await Student.findOneAndUpdate(
+      { name: studentName },
+      req.body,
+      { new: true }
+    );
+
+    console.log(updateStudent);
+
+    if (!updateStudent) {
+      return res.status(404).send({ message: "Student not found!" });
+    }
+
+    res.status(200).send({ message: "Update student successfully!", updateStudent });
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+
 app.delete("/students/:id",async(req,res)=>{
     try {
         const student_id=req.params.id;
@@ -84,18 +109,19 @@ app.delete("/students/:id",async(req,res)=>{
 })
 
 //making patch request 
-app.patch("/students/:id",async(req,res)=>{
-  try {
-    const _id=req.params.id;
-    const updateStudent=await Student.findByIdAndUpdate(_id,req.body,{
-      new :true
-    })
-    res.status(200).send({message:"Update student successfully!",updateStudent})
-    console.log("Student updated Data",updateStudent)
-  } catch (error) {
-    res.status(400).send(error)
-  }
-})
+// app.patch("/students/:id",async(req,res)=>{
+//   try {
+//     const _id=req.params.id;
+//     console.log(_id)
+//     const updateStudent=await Student.findByIdAndUpdate(_id,req.body,{
+//       new :true
+//     })
+//     res.status(200).send({message:"Update student successfully!",updateStudent})
+//     console.log("Student updated Data",updateStudent)
+//   } catch (error) {
+//     res.status(400).send(error)
+//   }
+// })
 app.listen(port, () => {
   console.log(`Connection is setup ${port}`);
 });
