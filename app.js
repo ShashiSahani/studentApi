@@ -1,3 +1,5 @@
+
+//start the code nodemon app.js
 const express = require("express");
 
 const app = express();
@@ -24,7 +26,7 @@ app.post("/students", async (req, res) => {
   try {
     const student = new Student(req.body);
     const createUser = await student.save();
-    res.status(201).send(createUser);
+    res.status(201).send({message:"student created successfully!",createUser});
   } catch (error) {
     res.status(400).send(error);
   }
@@ -51,7 +53,7 @@ app.post("/students", async (req, res) => {
 app.get("/students/:name",async(req,res)=>{
     try {
         const name=req.params.name;
-        console.log("This is paaram result",name);
+        // console.log("This is paaram result",name);
       //findinf the student by name
         const studentData=await Student.findOne({name})
        console.log(studentData)
@@ -63,6 +65,36 @@ app.get("/students/:name",async(req,res)=>{
     } catch (error) {
         res.status(400).send(error)
     }
+})
+
+app.delete("/students/:id",async(req,res)=>{
+    try {
+        const student_id=req.params.id;
+        console.log(student_id)
+        const deleteStudent=await Student.findOneAndDelete(student_id)
+        if(!deleteStudent){
+            return res.status(404).send({error:"Student not found"})
+        }
+        res.status(200).send({message:"Studenet deleted successfully",deleteStudent})
+        
+
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+//making patch request 
+app.patch("/students/:id",async(req,res)=>{
+  try {
+    const _id=req.params.id;
+    const updateStudent=await Student.findByIdAndUpdate(_id,req.body,{
+      new :true
+    })
+    res.status(200).send({message:"Update student successfully!",updateStudent})
+    console.log("Student updated Data",updateStudent)
+  } catch (error) {
+    res.status(400).send(error)
+  }
 })
 app.listen(port, () => {
   console.log(`Connection is setup ${port}`);
